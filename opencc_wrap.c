@@ -2,22 +2,28 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "opencc/opencc.h"
+#include "opencc_wrap.h"
+
+
 
 const char *Convert(const char *input, const char *config) {
 	if(strlen(config) > 16) {
 		return 0;
 	}
 
-	char configFile[256] = "/usr/share/opencc/";
+	char configFile[256] = "/usr/local/share/opencc/";
 	strcat(configFile, config);
 	strcat(configFile, ".json");
-
+    printf("configFile =%s\n",configFile);
 	opencc_t p = opencc_open(configFile);
+	printf("opencc_open ok\n");
 	char *out = opencc_convert_utf8(p, input, strlen(input));
-	out[strlen(input)] = '\0';
+	printf("opencc_convert ok\n");
+	//out[strlen(input)] = '\0';
+	printf("out=%s,out address=%p\n",out,out);
 
 	opencc_close(p);
+	printf("opencc_close ok.out address=%p\n",out);
 
 	return out;
 }
@@ -36,7 +42,6 @@ void Opencc_Delete(void *id) {
 
 const char *Opencc_Convert(void *id, const char *input) {
 	char *output = opencc_convert_utf8(id, input, strlen(input));
-	output[strlen(input)] = '\0';
 	return output;
 }
 

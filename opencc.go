@@ -2,8 +2,8 @@ package opencc
 
 import "unsafe"
 
-// #cgo LDFLAGS: -lopencc
-// #include "opencc.h"
+//#cgo pkg-config: opencc
+//#include "opencc_wrap.h"
 import "C"
 
 type Converter struct {
@@ -12,17 +12,17 @@ type Converter struct {
 
 func NewConverter(config string) *Converter {
 	c := Converter{}
-	c.id = C.Opencc_New(C.CString(config));
+	c.id = C.Opencc_New(C.CString(config))
 	return &c
 }
 
-func (c *Converter)Convert(input string) string {
+func (c *Converter) Convert(input string) string {
 	output := C.Opencc_Convert(c.id, C.CString(input))
 	defer C.Opencc_Free_String(output)
 	return C.GoString(output)
 }
 
-func (c *Converter)Close(){
+func (c *Converter) Close() {
 	C.Opencc_Delete(c.id)
 }
 
